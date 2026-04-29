@@ -2,19 +2,26 @@
 # example override to clang: make run CC=clang
 CC = gcc
 
-.PHONY: all
-all: run run_omp
-
 # the most basic way of building that is most likely to work on most systems
-.PHONY: run
-run: run.c
+.PHONY: x86
+x86: run.c
 	$(CC) -O3 -static -march=x86-64 -o run run.c -lm
 	$(CC) -O3 -static -march=x86-64 -o runq runq.c -lm
 
-.PHONY: run_omp
-run_omp: run.c
+.PHONY: x86_omp
+x86_omp: run.c
 	$(CC) -Ofast -fopenmp -static -march=x86-64 run.c  -lm  -o run_omp
 	$(CC) -Ofast -fopenmp -static -march=x86-64 runq.c  -lm  -o runq_omp
+
+.PHONY: arm64
+arm64: run.c
+	$(CC) -O3 -static -march=armv8-a -o run run.c -lm
+	$(CC) -O3 -static -march=armv8-a -o runq runq.c -lm
+
+.PHONY: arm64_omp
+arm64_omp: run.c
+	$(CC) -Ofast -fopenmp -static -march=armv8-a run.c  -lm  -o run_omp
+	$(CC) -Ofast -fopenmp -static -march=armv8-a runq.c  -lm  -o runq_omp
 
 .PHONY: output
 output: run run_omp
